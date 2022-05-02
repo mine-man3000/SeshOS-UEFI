@@ -1,6 +1,6 @@
 ## BUILDING
 
-install gcc, nasm, qemu-system-x86_64 and 
+install gcc, nasm, qemu-system-x86_64. it is a UEFI OS but the UEFI files are in the repo.
 
 ## TODO
 
