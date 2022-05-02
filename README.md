@@ -1,6 +1,8 @@
 ## BUILDING
 
-install gcc, nasm, qemu-system-x86_64. it is a UEFI OS but the UEFI files are in the repo.
+install gcc, nasm, qemu-system-x86_64, and make. it is a UEFI OS but the UEFI files are in the repo.
+
+then run ``./build.sh`` and it will build and run the OS.
 
 ## TODO
 
