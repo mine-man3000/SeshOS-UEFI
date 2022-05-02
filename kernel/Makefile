@@ -2,7 +2,6 @@
 OSNAME = CustomOS
 
 GNUEFI = ../gnu-efi
-OVMFDIR = /usr/share/OVMF/
 LDS = kernel.ld
 CC = gcc
 ASMC = nasm
@@ -63,7 +62,7 @@ buildimg:
 	mcopy -i $(BUILDDIR)/$(OSNAME).img $(BUILDDIR)/zap-light16.psf ::
 
 run:
-	qemu-system-x86_64 -machine q35 -drive file=$(BUILDDIR)/$(OSNAME).img -m 256M -cpu qemu64 -drive if=pflash,format=raw,unit=0,file="$(OVMFDIR)/OVMF_CODE.fd",readonly=on -drive if=pflash,format=raw,unit=1,file="../OVMF_VARS.fd" -net none
+	qemu-system-x86_64 -machine q35 -drive file=$(BUILDDIR)/$(OSNAME).img -m 256M -cpu qemu64 -drive if=pflash,format=raw,unit=0,file="../OVMF_CODE.fd",readonly=on -drive if=pflash,format=raw,unit=1,file="../OVMF_VARS.fd" -net none
 
 clean:
 	rm -rvf lib/*

@@ -1,3 +1,9 @@
+## BUILDING
+
+install gcc, nasm, qemu-system-x86_64 and 
+
+## TODO
+
 What I want to do: 
 - [X] Booting 
 - [ ] Basic GUI 
@@ -23,4 +29,4 @@ What I need to do:
 - [ ] Decide how to abstract devices. UNIX likes usually go for a /dev virtual filesystem 
 - [ ] Get a userland going by loading executables from your VFS and running them in ring 3. Set up a way to run sys calls.
 - [X] Write a PCI driver.
-- [X] Add support for a storage medium, the easiest and most common ones are AHCI and NVMe.
+- [X] Add support for a storage medium, the easiest and most common ones are AHCI and NVMe
