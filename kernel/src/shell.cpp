@@ -10,14 +10,28 @@ void Shell::PrintPrompt()
     GlobalRenderer->Print(" # ");
 }
 
-void Shell::TestCMD(const char* input)
+void Shell::TestCMD(char* input)
 {
-    GlobalRenderer->Print("You said \"");
-    GlobalRenderer->Print(input);
-    GlobalRenderer->Print("\"\n");
-    if (input == "ver")
+    if (strcmp(input, "ver"))
     {
         GlobalRenderer->Print("SeshOS version 0.1.0\n");
+    }
+    else if (strcmp(input, "help"))
+    {
+        GlobalRenderer->Print("List of available commands:\n");
+        GlobalRenderer->Print("    ver: shows the version of SeshOS\n");
+        GlobalRenderer->Print("    help: shows this menu\n");
+        GlobalRenderer->Print("    clear: clears the screen\n");
+    }
+    else if (strcmp(input, "clear"))
+    {
+        GlobalRenderer->Clear();
+    }
+    else
+    {
+        GlobalRenderer->Print("Unknown command: \"");
+        GlobalRenderer->Print(input);
+        GlobalRenderer->Print("\"\n");
     }
 }
 

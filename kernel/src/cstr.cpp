@@ -177,3 +177,24 @@ const char *to_string(double value)
 {
     return to_string(value, 2);
 }
+
+int strlen(char* str)
+{
+    int i = 0;
+    for (; str[i] != '\0'; i++);
+    return i;
+}
+
+typedef char BYTE;
+
+bool strcmp(char *str1, char *str2) {
+    while (true) {
+        if (*str1 != *str2) {
+            return false;
+        } else if (*str1 == 0) { // we can skip checking str2 since theyre the same
+            return true;
+        }
+        str1 ++;
+        str2 ++;
+    }
+}

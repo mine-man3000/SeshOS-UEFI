@@ -13,9 +13,11 @@ What I want to do:
 - [X] Buttons
 - [X] Keyboard Driver
 - [ ] Window system
-- [ ] Read From FAT32
-- [ ] Terminal
+- [ ] Read from FAT12
+- [X] Terminal
 - [ ] Port *Something*
+- [ ] Make boot partition FAT32
+- [ ] Read from FAT32
 
 What I need to do:
 - [X] Load an IDT so that exceptions and interrupts can be handled.
@@ -27,7 +29,7 @@ What I need to do:
 - [X] Configure a timer such as the Local APIC timer, the PIT, or the HPET.
 - [ ] Implement a scheduler to schedule threads in order make multitasking possible.
 - [ ] Design a virtual file system (VFS) and implement it. The traditional UNIX VFS works  when porting software
-- [ ] Implement a simple virtual file system like a memory-only tmpf
+- [ ] Implement a simple virtual file system like a memory-only tmpfs
 - [ ] Decide how to abstract devices. UNIX likes usually go for a /dev virtual filesystem 
 - [ ] Get a userland going by loading executables from your VFS and running them in ring 3. Set up a way to run sys calls.
 - [X] Write a PCI driver.

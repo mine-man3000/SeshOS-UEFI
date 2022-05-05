@@ -49,8 +49,15 @@ void HandleKeyboard(uint8_t scancode)
         return;
     case BackSpace:
         GlobalRenderer->ClearChar();
-        i--;
-        input[i] = ' ';
+        if (i != 0)
+        {
+            i--;
+            input[i] = ' ';
+        }
+        else
+        {
+            GlobalRenderer->CursorPosition.X += 8;
+        }
         return;
     }
 

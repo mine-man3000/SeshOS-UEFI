@@ -97,6 +97,7 @@ void BasicRenderer::Clear()
             *pixPtr = ClearColor;
         }
     }
+    CursorPosition = {0,0};
 }
 
 void BasicRenderer::ClearChar()

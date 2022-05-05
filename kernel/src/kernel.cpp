@@ -2,6 +2,7 @@
 #include "memory/heap.h"
 #include "scheduling/pit.h"
 #include "shell.h"
+#include "fs/fat12.h"
 
 extern "C" void _start(BootInfo *bootInfo)
 {
@@ -11,6 +12,8 @@ extern "C" void _start(BootInfo *bootInfo)
     GlobalRenderer->Print("\n\nWelcome to SeshOS!\n");
 
     newShell->PrintPrompt();
+
+    FillBPB();
 
     while (true)
     {
