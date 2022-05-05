@@ -205,7 +205,7 @@ void Panic(const char *panicMessage)
 
     GlobalRenderer->Print(panicMessage);
 
-    GlobalRenderer->Print("SeshOS has been shutdown to prevent damage to your computer");
+    GlobalRenderer->Print("\n\nSeshOS has been shutdown to prevent damage to your computer");
 
     asm("hlt");
 }

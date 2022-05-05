@@ -1,7 +1,11 @@
 #include "keyboard.h"
+#include "../shell.h"
 
 bool isLeftShiftPressed;
 bool isRightShiftPressed;
+
+int i = 0;
+char input[10] = "";
 
 void HandleKeyboard(uint8_t scancode)
 {
@@ -22,12 +26,31 @@ void HandleKeyboard(uint8_t scancode)
         return;
     case Enter:
         GlobalRenderer->Next();
+        newShell->TestCMD(input);
+        newShell->PrintPrompt();
+        
+        for (int j = 0; input[j] != ' '; j++)
+        {
+            if (input[j] == '\0')
+            {
+                i = 0;
+                return;
+            }
+            else
+            {
+                input[j] = NULL;
+            }
+        };
+        i = 0;
+
         return;
     case Spacebar:
         GlobalRenderer->PutChar(' ');
         return;
     case BackSpace:
         GlobalRenderer->ClearChar();
+        i--;
+        input[i] = ' ';
         return;
     }
 
@@ -36,6 +59,8 @@ void HandleKeyboard(uint8_t scancode)
     if (ascii != 0)
     {
         GlobalRenderer->PutChar(ascii);
+        input[i] = ascii;
+        i++;
     }
 }
 
