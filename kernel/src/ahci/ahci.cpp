@@ -2,6 +2,11 @@
 #include "../renderer.h"
 #include "../paging/paging.h"
 #include "../memory/heap.h"
+#include "../fs/fat12.h"
+
+void FillBPB(AHCI::Port *port);
+int FillFiles(AHCI::Port *port);
+
 
 namespace AHCI
 {
@@ -75,14 +80,10 @@ namespace AHCI
         hbaPort->commandListBaseUpper = (uint32_t)((uint64_t)newBase >> 32);
         memset((void *)(hbaPort->commandListBase), 0, 1024);
 
-        GlobalRenderer->Print("YES\n");
-
         void *fisBase = GlobalAllocator.RequestPage();
         hbaPort->fisBaseAddress = (uint32_t)(uint64_t)fisBase;
         hbaPort->fisBaseAddressUpper = (uint32_t)((uint64_t)fisBase >> 32);
         memset(fisBase, 0, 256);
-
-        GlobalRenderer->Print("NO\n");
 
         HBACommandHeader *cmdHeader = (HBACommandHeader *)((uint64_t)hbaPort->commandListBase + ((uint64_t)hbaPort->commandListBaseUpper << 32));
 
@@ -96,8 +97,6 @@ namespace AHCI
             cmdHeader[i].commandTableBaseAddressUpper = (uint32_t)((uint64_t)address >> 32);
             memset(cmdTableAddress, 0, 256);
         }
-
-        GlobalRenderer->Print("BROCOLLI\n");
 
         StartCMD();
     }
@@ -211,9 +210,15 @@ namespace AHCI
             memset(port->buffer, 0, 0x1000);
 
             port->Read(0, 4, port->buffer);
-            //for (int t = 0; t < 1024; t++){
-            //    GlobalRenderer->PutChar(port->buffer[t]);
-            //}
+            
+            if (i == 0)
+            {
+                FillBPB(port);
+            
+                port->Read(19, 1, port->buffer);
+
+                FillFiles(port);
+            }
         }
     }
 

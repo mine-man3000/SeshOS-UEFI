@@ -27,6 +27,42 @@ void Shell::TestCMD(char* input)
     {
         GlobalRenderer->Clear();
     }
+    else if (strcmp(input, "ls"))
+    {
+        ls();
+    }
+    else if (strcmp(input, "volinfo"))
+    {
+        volInfo();
+    }
+    else if (strcmp(input, "neofetch"))
+    {
+        GlobalRenderer->Print("SSSSSS   EEEEEE  SSSSSS  HH  HH    root@SeshOS\n");
+        GlobalRenderer->Print("SSSSSS   EEEEEE  SSSSSS  HH  HH    -----------\n");
+        GlobalRenderer->Print("SSS      EE      SSS     HH  HH    OS: SeshOS 0.1.0\n");
+        GlobalRenderer->Print("SSS      EE      SSS     HH  HH    Kernel: 0.1.0\n");
+        GlobalRenderer->Print("SSSSSS   EEEEEE  SSSSSS  HHHHHH    Shell: SeSH (Sesh SHell)\n");
+        GlobalRenderer->Print("SSSSSS   EEEEEE  SSSSSS  HHHHHH    Resolution: "); 
+        GlobalRenderer->Print(to_string((uint64_t)GlobalRenderer->TargetFramebuffer->Width));
+        GlobalRenderer->Print("x");
+        GlobalRenderer->Print(to_string((uint64_t)GlobalRenderer->TargetFramebuffer->Height));
+        GlobalRenderer->Print("\n");
+        GlobalRenderer->Print("   SSS   EE         SSS  HH  HH    \n");
+        GlobalRenderer->Print("   SSS   EE         SSS  HH  HH    \n");
+        GlobalRenderer->Print("SSSSSS   EEEEEE  SSSSSS  HH  HH    \n");
+        GlobalRenderer->Print("SSSSSS   EEEEEE  SSSSSS  HH  HH    \n");
+        GlobalRenderer->Print("                                   \n");
+        GlobalRenderer->Print("                 OOOOOO  SSSSSS    \n");
+        GlobalRenderer->Print("    II  II       OO  OO  SSSSSS    \n");
+        GlobalRenderer->Print("    II  II       OO  OO  SSS       \n");
+        GlobalRenderer->Print("    II  II       OO  OO  SSS       \n");
+        GlobalRenderer->Print("  \\\\      //     OO  OO  SSSSSS    \n");
+        GlobalRenderer->Print("   \\\\====//      OO  OO  SSSSSS    \n");
+        GlobalRenderer->Print("                 OO  OO     SSS    \n");
+        GlobalRenderer->Print("                 OO  OO     SSS    \n");
+        GlobalRenderer->Print("                 OO  OO  SSSSSS    \n");
+        GlobalRenderer->Print("                 OOOOOO  SSSSSS    \n");
+    }
     else
     {
         GlobalRenderer->Print("Unknown command: \"");

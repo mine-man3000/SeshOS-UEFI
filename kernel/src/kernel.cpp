@@ -11,9 +11,23 @@ extern "C" void _start(BootInfo *bootInfo)
 
     GlobalRenderer->Print("\n\nWelcome to SeshOS!\n");
 
-    newShell->PrintPrompt();
+    uint64_t freeMem = GlobalAllocator.GetFreeRAM() / 1024 / 1024;
+    uint64_t UsedMem = GlobalAllocator.GetUsedRAM() / 1024 / 1024;
+    uint64_t ResvMem = GlobalAllocator.GetReservedRAM() / 1024 / 1024;
 
-    FillBPB();
+    uint64_t totMem = freeMem + UsedMem + ResvMem;
+
+
+
+    GlobalRenderer->Print("Free RAM: ");
+    GlobalRenderer->Print(to_string((uint64_t)freeMem));
+    GlobalRenderer->Print(" MB out of ");
+    GlobalRenderer->Print(to_string((uint64_t)totMem));
+    GlobalRenderer->Print(" MB\n");
+    GlobalRenderer->Print("Root File Count: ");
+    GlobalRenderer->Print(to_string((uint64_t)fileCount));
+
+    newShell->PrintPrompt();
 
     while (true)
     {

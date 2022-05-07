@@ -46,6 +46,7 @@ void HandleKeyboard(uint8_t scancode)
         return;
     case Spacebar:
         GlobalRenderer->PutChar(' ');
+        input[i] = ' ';
         return;
     case BackSpace:
         GlobalRenderer->ClearChar();
