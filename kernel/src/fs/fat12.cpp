@@ -73,31 +73,48 @@ void ls()
 {
     for (int i = 0; i < fileCount; i++)
     {
-        if (Files[i].Flags == Dir)
+        bool tmp = false;
+        if (Files[i].FileName[0] == 'B' && Files[i].FileName[2] == NULL)
         {
-            GlobalRenderer->Color = 0x000000ff;
-            GlobalRenderer->Print(Files[i].FileName);
-            GlobalRenderer->Color = 0xffffffff;
-            GlobalRenderer->Print("\n");
+            i++;
         }
-        else
+        for (int a = 0; a < 11; a++)
         {
-            if (Files[i].FileName[8] != '.')
+            if ((Files[i].FileName[a] >= '0' && Files[i].FileName[a] <= '9') || 
+                (Files[i].FileName[a] >= 'A' && Files[i].FileName[a] <= 'Z'))
             {
-                char a = Files[i].FileName[8];
-                char b = Files[i].FileName[9];
-                char c = Files[i].FileName[10];
-                Files[i].FileName[9]  = a;
-                Files[i].FileName[10] = b;
-                Files[i].FileName[11] = c;
-                Files[i].FileName[8] = '.';
+                tmp = true;   
             }
-            GlobalRenderer->Color = 0xffffffff;
-            GlobalRenderer->Print(Files[i].FileName);
-            GlobalRenderer->Print("\n");
         }
-    }    
-}
+        if (tmp)
+        {
+            if (Files[i].Flags == Dir)
+            {
+                GlobalRenderer->Color = 0x000000ff;
+                GlobalRenderer->Print(Files[i].FileName);
+                GlobalRenderer->Color = 0xffffffff;
+                GlobalRenderer->Print("\n");
+            }
+            else
+            {
+                if (Files[i].FileName[8] != '.')
+                {
+                    char a = Files[i].FileName[8];
+                    char b = Files[i].FileName[9];
+                    char c = Files[i].FileName[10];
+                    Files[i].FileName[9]  = a;
+                    Files[i].FileName[10] = b;
+                    Files[i].FileName[11] = c;
+                    Files[i].FileName[8] = '.';
+                }
+                GlobalRenderer->Color = 0xffffffff;
+                GlobalRenderer->Print(Files[i].FileName);
+                GlobalRenderer->Print("\n");
+            }
+        }
+    }
+}    
+
 
 void FillBPB(AHCI::Port *port)
 {
@@ -184,7 +201,7 @@ int FillFiles(AHCI::Port *port)
             Files[fileCount].FileName[i] = port->buffer[i+t];
         }
         Files[fileCount].Flags               = port->buffer[t + 11];
-        Files[fileCount].FileCreationTime[1] = port->buffer[t + 12]; //tenths of seconds
+        Files[fileCount].FileCreationTime[1] = port->buffer[t + 12];  //tenths of seconds
         Files[fileCount].CreationTime[2]     = port->buffer[t + 14];  //H,M,S
         Files[fileCount].CreationDate[2]     = port->buffer[t + 15];
         Files[fileCount].AccessDate[2]       = port->buffer[t + 17];

@@ -24,8 +24,6 @@ extern "C" void _start(BootInfo *bootInfo)
     GlobalRenderer->Print(" MB out of ");
     GlobalRenderer->Print(to_string((uint64_t)totMem));
     GlobalRenderer->Print(" MB\n");
-    GlobalRenderer->Print("Root File Count: ");
-    GlobalRenderer->Print(to_string((uint64_t)fileCount));
 
     newShell->PrintPrompt();
 

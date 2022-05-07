@@ -60,6 +60,11 @@ buildimg:
 	rm -rf ./bootx64.efi
 	mcopy -i $(BUILDDIR)/$(OSNAME).img $(BUILDDIR)/kernel.elf ::
 	mcopy -i $(BUILDDIR)/$(OSNAME).img $(BUILDDIR)/zap-light16.psf ::
+	touch test.txt
+	mcopy -i $(BUILDDIR)/$(OSNAME).img test.txt ::
+
+	touch abcdefghijk.txt
+	mcopy -i $(BUILDDIR)/$(OSNAME).img abcdefghijk.txt ::
 
 run:
 	qemu-system-x86_64 -machine q35 -drive file=$(BUILDDIR)/$(OSNAME).img -m 1G -cpu qemu64 -drive if=pflash,format=raw,unit=0,file="../OVMF_CODE.fd",readonly=on -drive if=pflash,format=raw,unit=1,file="../OVMF_VARS.fd" -net none
