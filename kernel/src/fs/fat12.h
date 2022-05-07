@@ -63,6 +63,7 @@ struct FatFile
     uint64_t ModifiedTime[2];
     uint64_t ModifiedDate[2];
     uint64_t FileSize[4];
+    bool skip;
 };
 
 void ls();
@@ -74,3 +75,4 @@ extern int fileCount;
 
 int FillFiles(AHCI::Port *port);
 void FillBPB(AHCI::Port *port);
+void ConvertFileNames();

@@ -25,7 +25,10 @@ extern "C" void _start(BootInfo *bootInfo)
     GlobalRenderer->Print(to_string((uint64_t)totMem));
     GlobalRenderer->Print(" MB\n");
 
+    //ConvertFileNames();
+
     newShell->PrintPrompt();
+
 
     while (true)
     {

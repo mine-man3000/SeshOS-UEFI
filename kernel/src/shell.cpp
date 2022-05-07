@@ -10,8 +10,10 @@ void Shell::PrintPrompt()
     GlobalRenderer->Print(" # ");
 }
 
+
 void Shell::TestCMD(char* input)
 {
+   TwoStrings twoStrings = strsplit(input, ' ');
     if (strcmp(input, "ver"))
     {
         GlobalRenderer->Print("SeshOS version 0.1.0\n");
@@ -39,8 +41,8 @@ void Shell::TestCMD(char* input)
     {
         GlobalRenderer->Print("SSSSSS   EEEEEE  SSSSSS  HH  HH    root@SeshOS\n");
         GlobalRenderer->Print("SSSSSS   EEEEEE  SSSSSS  HH  HH    -----------\n");
-        GlobalRenderer->Print("SSS      EE      SSS     HH  HH    OS: SeshOS 0.1.0\n");
-        GlobalRenderer->Print("SSS      EE      SSS     HH  HH    Kernel: 0.1.0\n");
+        GlobalRenderer->Print("SSS      EE      SSS     HH  HH    OS: SeshOS 0.2.0\n");
+        GlobalRenderer->Print("SSS      EE      SSS     HH  HH    Kernel: 0.2.0\n");
         GlobalRenderer->Print("SSSSSS   EEEEEE  SSSSSS  HHHHHH    Shell: SeSH (Sesh SHell)\n");
         GlobalRenderer->Print("SSSSSS   EEEEEE  SSSSSS  HHHHHH    Resolution: "); 
         GlobalRenderer->Print(to_string((uint64_t)GlobalRenderer->TargetFramebuffer->Width));
@@ -62,6 +64,17 @@ void Shell::TestCMD(char* input)
         GlobalRenderer->Print("                 OO  OO     SSS    \n");
         GlobalRenderer->Print("                 OO  OO  SSSSSS    \n");
         GlobalRenderer->Print("                 OOOOOO  SSSSSS    \n");
+    }
+    else if (strcmp(twoStrings.a, "cat"))
+    {
+        if(strlen(twoStrings.b) == 0)
+        {
+            GlobalRenderer->Print("ERROR: NO INPUT FILE SPECIFIED\n");
+        }
+        else
+        {
+            ConvertFileNames();
+        }
     }
     else
     {

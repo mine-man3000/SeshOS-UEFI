@@ -69,19 +69,23 @@ void volInfo()
 
 }
 
+
+
+
 void ls()
 {
+    ConvertFileNames();
     for (int i = 0; i < fileCount; i++)
     {
         bool tmp = false;
-        if (Files[i].FileName[0] == 'B' && Files[i].FileName[2] == NULL)
+        if (Files[i].FileName[0] == 'b' && Files[i].FileName[2] == NULL)
         {
-            i++;
+            i += 2;
         }
         for (int a = 0; a < 11; a++)
         {
             if ((Files[i].FileName[a] >= '0' && Files[i].FileName[a] <= '9') || 
-                (Files[i].FileName[a] >= 'A' && Files[i].FileName[a] <= 'Z'))
+                (Files[i].FileName[a] >= 'a' && Files[i].FileName[a] <= 'z'))
             {
                 tmp = true;   
             }
@@ -113,8 +117,9 @@ void ls()
             }
         }
     }
-}    
+}
 
+void cat();
 
 void FillBPB(AHCI::Port *port)
 {
@@ -211,3 +216,35 @@ int FillFiles(AHCI::Port *port)
         fileCount++;   
     }
 }   
+
+/*
+    2. remove spaces between name and extension if they exist
+    3. remove the long file name crap entirely from the struct
+        by taking the info from the next entry and replace info
+        in current entry
+    4. change fileCount to reflect this change                 
+*/
+
+void ConvertFileNames()
+{
+    for (int i = 0; i < fileCount; i++)
+    {
+        //1. convert name to lowercase
+        for (int t = 0; t < 12; t++)
+        {
+            if(Files[i].FileName[t] >= 65 && Files[i].FileName[t] <= 90)
+            {
+                Files[i].FileName[t] = Files[i].FileName[t] + 32;
+            }
+        }
+        int firstSpacePos = 0;
+        for (int t = 0; t < 12; t++)
+        {
+            if(Files[i].FileName[t] == ' ' && firstSpacePos != 0)
+            {
+                firstSpacePos = t;
+                Files[i].FileName[t] = Files[i].FileName[t + 1];
+            }
+        }
+    }
+}

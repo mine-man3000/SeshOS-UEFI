@@ -198,3 +198,30 @@ bool strcmp(char *str1, char *str2) {
         str2 ++;
     }
 }
+
+TwoStrings strsplit(char *str, char split)
+{
+    char p1[128];
+    char p2[128];
+    int i = 0;
+
+    for (; i < strlen(str) && str[i] != split; i++)
+    {
+        p1[i] = str[i];
+    }
+    i++;
+    for (int j = 0; i < strlen(str); j++)
+    {
+        p2[j] = str[i];
+        i++;
+    }
+    TwoStrings yes;
+
+    for (int i = 0; i < 128; i++)
+    {
+        yes.a[i] = p1[i];
+        yes.b[i] = p2[i];
+    }
+    
+    return yes;
+}
