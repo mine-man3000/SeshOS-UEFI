@@ -54,7 +54,7 @@ struct BiosParamBlock
 
 struct FatFile
 {
-    char FileName[12];
+    char FileName[13];
     uint64_t Flags;
     uint64_t FileCreationTime[1]; //tenths of seconds
     uint64_t CreationTime[2];     //H,M,S

@@ -1,8 +1,10 @@
 #include "fat12.h"
+#include "../memory/heap.h"
 
 BiosParamBlock BPB;
 FatFile Files[224];
 int fileCount;
+void fixFilename(char *filename, int index);
 
 void volInfo()
 {
@@ -101,16 +103,6 @@ void ls()
             }
             else
             {
-                if (Files[i].FileName[8] != '.')
-                {
-                    char a = Files[i].FileName[8];
-                    char b = Files[i].FileName[9];
-                    char c = Files[i].FileName[10];
-                    Files[i].FileName[9]  = a;
-                    Files[i].FileName[10] = b;
-                    Files[i].FileName[11] = c;
-                    Files[i].FileName[8] = '.';
-                }
                 GlobalRenderer->Color = 0xffffffff;
                 GlobalRenderer->Print(Files[i].FileName);
                 GlobalRenderer->Print("\n");
@@ -237,14 +229,59 @@ void ConvertFileNames()
                 Files[i].FileName[t] = Files[i].FileName[t] + 32;
             }
         }
-        int firstSpacePos = 0;
-        for (int t = 0; t < 12; t++)
+
+        //2. put space in
+        if (Files[i].FileName[8] != '.')
         {
-            if(Files[i].FileName[t] == ' ' && firstSpacePos != 0)
-            {
-                firstSpacePos = t;
-                Files[i].FileName[t] = Files[i].FileName[t + 1];
-            }
+            char a = Files[i].FileName[8];
+            char b = Files[i].FileName[9];
+            char c = Files[i].FileName[10];
+            Files[i].FileName[9]  = a;
+            Files[i].FileName[10] = b;
+            Files[i].FileName[11] = c;
+            Files[i].FileName[8] = '.';
         }
+
+        //. remove spaces between name and extension if they exist
+        fixFilename(Files[i].FileName, i);
     }
+}
+
+char fixedFilename[13]; // stores the result
+
+void fixFilename(char *filename, int index) {
+    int outPos = 0; // position in output array
+    int numSpaces = 0;
+    bool printedExtension = false;
+    
+    for (int i = 0; i < 11; i ++) {
+        char current = filename[i]; // char we're at
+
+        if (current == ' ') { // skip printing if we've hit a space
+            numSpaces ++;
+            continue;
+        } else if (numSpaces > 0 && i < 8) { // do we have spaces we skipped and should we insert them?
+            for (int j = 0; j < numSpaces; j ++)
+                fixedFilename[outPos ++] = ' ';
+            numSpaces = 0;
+        }
+        
+        if (i >= 8 && !printedExtension) { // reached where the dot should be, insert it before inserting first char of extension
+            fixedFilename[outPos ++] = '.';
+            printedExtension = true;
+        }
+
+        if (current >= 'A' && current <= 'Z') // convert to lowercase
+            current += 32;
+
+        fixedFilename[outPos ++] = current;
+    }
+    
+    fixedFilename[outPos] = 0; // add terminating null byte to end of string
+
+    for (int t = 0; t < 12; t++)
+    {
+      Files[index].FileName[t] = fixedFilename[t];
+    }
+
 }
