@@ -4,7 +4,7 @@ void* address = GlobalRenderer->TargetFramebuffer->BaseAddress;
 int width =  GlobalRenderer->TargetFramebuffer->Width;
 int height = GlobalRenderer->TargetFramebuffer->Height;
 
-unsigned char *framebuffer = (unsigned char *) malloc(width * height);
+unsigned char *framebuffer = (unsigned char *) malloc(width * height * sizeof(unsigned char));
 
 void memcpy(uint8_t *source, uint8_t *dest, int nbytes)
 {
@@ -20,7 +20,7 @@ void initGUI()
     GlobalRenderer->ClearColor = 0x000000ff;
     GlobalRenderer->Clear();
 
-    drawRect(0, height - (height - 40), width, height, 0xaaaaaaaa);
+    drawRect(0, 0, 40, 40, 0xaaaaaaaa);
 }
 
 void drawRect(int startx, int starty, int width, int height, unsigned char VGA_COLOR)
@@ -28,12 +28,11 @@ void drawRect(int startx, int starty, int width, int height, unsigned char VGA_C
     int endx = startx + width;
     int endy = starty + height;
 
-    for (int i = startx; i < endx; i++)
+    for (int x = startx; x < endx; x++)
     {
-        for (int j = starty; j < endy; j++)
+        for (int y = starty; y < endy; y++)
         {
-            framebuffer[i + j * width] = VGA_COLOR;
+            GlobalRenderer->PutPix(x, y, VGA_COLOR);
         }        
     }
-    memcpy(framebuffer, (uint8_t*)address, sizeof(framebuffer));
 }
