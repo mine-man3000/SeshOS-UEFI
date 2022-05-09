@@ -185,7 +185,14 @@ void BasicRenderer::PutChar(char chr, unsigned int xOff, unsigned int yOff)
         }
         else
         {
-            CursorPosition = {-8, CursorPosition.Y += 16};
+            if (CursorPosition.Y + 16 > TargetFramebuffer->Height)
+            {
+                Next();
+            }
+            else
+            {
+                CursorPosition = {-8, CursorPosition.Y += 16};
+            }
         }
     }
     else
@@ -217,7 +224,7 @@ void BasicRenderer::PutChar(char chr)
 
 void Panic(const char *panicMessage)
 {
-    GlobalRenderer->ClearColor = 0x00ff0000;
+    GlobalRenderer->ClearColor = 0;
     GlobalRenderer->Clear();
 
     GlobalRenderer->CursorPosition = {0, 0};
