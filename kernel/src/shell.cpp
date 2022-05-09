@@ -55,7 +55,7 @@ void Shell::TestCMD(char* input)
         GlobalRenderer->Print("SSSSSS   EEEEEE  SSSSSS  HH  HH    -----------\n");
         GlobalRenderer->Print("SSS      EE      SSS     HH  HH    OS: SeshOS 0.2.0\n");
         GlobalRenderer->Print("SSS      EE      SSS     HH  HH    Kernel: 0.2.0\n");
-        GlobalRenderer->Print("SSSSSS   EEEEEE  SSSSSS  HHHHHH    Shell: SeSH (Sesh SHell)\n");
+        GlobalRenderer->Print("SSSSSS   EEEEEE  SSSSSS  HHHHHH    Shell: SESH (SEsh SHell)\n");
         GlobalRenderer->Print("SSSSSS   EEEEEE  SSSSSS  HHHHHH    Resolution: "); GlobalRenderer->Print(to_string((uint64_t)width)); GlobalRenderer->Print("x"); GlobalRenderer->Print(to_string((uint64_t)height)); GlobalRenderer->Print("\n");
         GlobalRenderer->Print("   SSS   EE         SSS  HH  HH    Memory: "); GlobalRenderer->Print(to_string((uint64_t)UsedMem + ResvMem)); GlobalRenderer->Print("MB / "); GlobalRenderer->Print(to_string((uint64_t)totMem)); GlobalRenderer->Print("MB\n");
         GlobalRenderer->Print("   SSS   EE         SSS  HH  HH    \n");
@@ -102,6 +102,7 @@ void Shell::TestCMD(char* input)
             ConvertFileNames();
         }
     }
+    else if (strcmp(input, "")){}
     else
     {
         GlobalRenderer->Print("Unknown command: \"");
@@ -112,3 +113,5 @@ void Shell::TestCMD(char* input)
 
 
 Shell *newShell;
+
+qemu-system-x86_64 -drive file=kernel/bin/CustomOS.img -m 1G -drive if=pflash,format=raw,unit=0,file="OVMF_CODE.fd",readonly=on -drive if=pflash,format=raw,unit=1,file="OVMF_VARS.fd" -net none

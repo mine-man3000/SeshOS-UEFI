@@ -67,19 +67,14 @@ void volInfo()
     GlobalRenderer->Print(BPB.FilSysType);
     GlobalRenderer->Print("\"\nSignature Word:        \"0x");
 
-    GlobalRenderer->Print(to_string((uint64_t)BPB.SigWord));
+    GlobalRenderer->Print(to_hstring((uint64_t)BPB.SigWord));
     GlobalRenderer->Print("\"\n"); 
 
 }
 
-
-//if (Files[i].FileName[0] == 'b' && Files[i].FileName[2] == NULL)
-//{
-//    i += 2;
-//}
-
 void ls()
 {
+    //3. filter out LongFileName stuff
     int hiddenFileCount = 0;
 
     for (int i = 0; i < fileCount; i++)
@@ -91,6 +86,7 @@ void ls()
         }
     }
 
+    //4. print out the real file count
     realFileCount = fileCount - hiddenFileCount;
     GlobalRenderer->Print("File count: ");
     GlobalRenderer->Print(to_string((uint64_t)realFileCount));
@@ -239,11 +235,8 @@ void ConvertFileNames()
         //2. remove spaces between name and extension if they exist and add a dot in between
         fixFilename(Files[i].FileName, i);
 
-        // if (Files[i].Flags == LongFileName)
-        // {
-        //     Files[i].skip = true;
-        //     Files[i + 1].skip = true;
-        // }
+        //step 3 + 4 done in ls()
+
     }
 }
 
