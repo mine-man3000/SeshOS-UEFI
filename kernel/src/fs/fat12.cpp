@@ -4,6 +4,7 @@
 BiosParamBlock BPB;
 FatFile Files[224];
 int fileCount;
+int realFileCount;
 void fixFilename(char *filename, int index);
 
 void volInfo()
@@ -72,31 +73,47 @@ void volInfo()
 }
 
 
-
+//if (Files[i].FileName[0] == 'b' && Files[i].FileName[2] == NULL)
+//{
+//    i += 2;
+//}
 
 void ls()
 {
+    int hiddenFileCount = 0;
+
+    for (int i = 0; i < fileCount; i++)
+    {
+        if (Files[i].Flags == LongFileName)
+        {
+            hiddenFileCount++;
+            Files[i].skip = true;
+        }
+    }
+
+    realFileCount = fileCount - hiddenFileCount;
     GlobalRenderer->Print("File count: ");
-    GlobalRenderer->Print(to_string((uint64_t)fileCount));
+    GlobalRenderer->Print(to_string((uint64_t)realFileCount));
     GlobalRenderer->Print("\n");
     for (int i = 0; i < fileCount; i++)
     {
-        if (Files[i].FileName[0] == 'b' && Files[i].FileName[2] == NULL)
+        if(!Files[i].skip)
         {
-            i += 2;
-        }
-        if (Files[i].Flags == Dir)
-        {
-            GlobalRenderer->Color = 0x000000ff;
-            GlobalRenderer->Print(Files[i].FileName);
-            GlobalRenderer->Color = 0xffffffff;
-            GlobalRenderer->Print("\n");
-        }
-        else
-        {
-            GlobalRenderer->Color = 0xffffffff;
-            GlobalRenderer->Print(Files[i].FileName);
-            GlobalRenderer->Print("\n");
+            if (Files[i].Flags == Dir)
+            {
+                GlobalRenderer->Color = 0x000000ff;
+                GlobalRenderer->Print(Files[i].FileName);
+                GlobalRenderer->Print("/  ");
+                GlobalRenderer->Color = 0xffffffff;
+                GlobalRenderer->Print("\n");
+            }
+            else
+            {
+                GlobalRenderer->Color = 0xffffffff;
+                GlobalRenderer->Print(Files[i].FileName);
+                GlobalRenderer->Print("  ");
+                GlobalRenderer->Print("\n");
+            }
         }
     }
 }
@@ -195,7 +212,7 @@ int FillFiles(AHCI::Port *port)
         Files[fileCount].ModifiedTime[2]     = port->buffer[t + 19];
         Files[fileCount].ModifiedDate[2]     = port->buffer[t + 21];
         Files[fileCount].FileSize[4]         = port->buffer[t + 22];
-        fileCount++;   
+        fileCount++;    
     }
     ConvertFileNames();
 }   
@@ -221,14 +238,19 @@ void ConvertFileNames()
         }
         //2. remove spaces between name and extension if they exist and add a dot in between
         fixFilename(Files[i].FileName, i);
+
+        // if (Files[i].Flags == LongFileName)
+        // {
+        //     Files[i].skip = true;
+        //     Files[i + 1].skip = true;
+        // }
     }
 }
 
-char fixedFilename[13]; // stores the result
-
-
 // written by https://github.com/notvelleda
 void fixFilename(char *filename, int index) {
+
+    char fixedFilename[13]; // stores the result
     int outPos = 0; // position in output array
     int numSpaces = 0;
     bool printedExtension = false;

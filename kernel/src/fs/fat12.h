@@ -12,6 +12,7 @@ extern uint8_t* myBuffer;
 #define Dir             0x10
 #define Archive         0x20
 
+
 // if(CountofClusters < 4085) 
 // { 
 //     /* Volume is FAT12 */
