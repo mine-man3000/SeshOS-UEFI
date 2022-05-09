@@ -2,12 +2,15 @@
 
 void Shell::PrintPrompt()
 {
-    GlobalRenderer->Color = 0x00ff0000;
-    GlobalRenderer->Print("root@SeshOS");
-    GlobalRenderer->Color = 0x000000ff;
-    GlobalRenderer->Print(" /");
-    GlobalRenderer->Color = 0xffffffff;
-    GlobalRenderer->Print(" # ");
+    if (shouldPrint)
+    {
+        GlobalRenderer->Color = 0x00ff0000;
+        GlobalRenderer->Print("root@SeshOS");
+        GlobalRenderer->Color = 0x000000ff;
+        GlobalRenderer->Print(" /");
+        GlobalRenderer->Color = 0xffffffff;
+        GlobalRenderer->Print(" # ");
+    }
 }
 
 
@@ -103,6 +106,11 @@ void Shell::TestCMD(char* input)
         }
     }
     else if (strcmp(input, "")){}
+    else if (strcmp(input, "startx"))
+    {
+        initGUI();
+        shouldPrint = false;
+    }
     else
     {
         GlobalRenderer->Print("Unknown command: \"");

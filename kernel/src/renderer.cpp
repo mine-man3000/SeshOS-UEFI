@@ -222,7 +222,7 @@ void Panic(const char *panicMessage)
 
     GlobalRenderer->CursorPosition = {0, 0};
 
-    GlobalRenderer->Color = 0;
+    GlobalRenderer->Color = 0xffffffff;
 
     GlobalRenderer->Print("Kernel Panic\n\n");
 
