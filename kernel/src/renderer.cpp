@@ -79,7 +79,7 @@ void BasicRenderer::DrawOverlayMouseCursor(uint8_t *mouseCursor, Point position,
         }
     }
 
-    MouseDrawn = true;
+    MouseDrawn = true;  
 }
 
 void BasicRenderer::Clear()
