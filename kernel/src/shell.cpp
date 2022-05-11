@@ -1,4 +1,5 @@
 #include "shell.h"
+#include "userinput/mouse.h"
 
 void Shell::PrintPrompt()
 {
@@ -102,7 +103,14 @@ void Shell::TestCMD(char* input)
         }
         else
         {
-            ConvertFileNames();
+            for (int i = 0; i < fileCount; i++)
+            {
+                if (strcmp(Files[i].FileName, twoStrings.b))
+                {
+                    break;
+                }
+            }
+            cat();
         }
     }
     else if (strcmp(input, "")){}
@@ -119,5 +127,15 @@ void Shell::TestCMD(char* input)
     }
 }
 
-
 Shell *newShell;
+
+void initGUI()
+{
+    GlobalRenderer->ClearColor = 0xff0000a4;
+    GlobalRenderer->Clear();
+
+    drawRect(0, 850, 1600, 50, 0xffa4a4a4);
+
+    Window newWindow = Window(10, 10, 1000, 100, "Test",            0xffffffff);
+    Window anotherWindow = Window(20, 120, 100, 100, "1234567890",  0x00000000);
+}

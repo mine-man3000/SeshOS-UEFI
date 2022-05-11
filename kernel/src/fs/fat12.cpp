@@ -114,7 +114,10 @@ void ls()
     }
 }
 
-void cat();
+void cat()
+{
+
+}
 
 void FillBPB(AHCI::Port *port)
 {
@@ -278,4 +281,12 @@ void fixFilename(char *filename, int index) {
       Files[index].FileName[t] = fixedFilename[t];
     }
 
+}
+
+void FillFileContents(AHCI::Port *port)
+{
+    for (int t = 0; t < 1024; t++)
+    {
+        GlobalRenderer->PutChar(port->buffer[t]);
+    }
 }

@@ -54,7 +54,7 @@ void HandleKeyboard(uint8_t scancode)
         if (i != 0)
         {
             i--;
-            input[i] = ' ';
+            input[i] = NULL;
         }
         else
         {

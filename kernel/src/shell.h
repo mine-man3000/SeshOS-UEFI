@@ -3,6 +3,8 @@
 #include "cstr.h"
 #include "fs/fat12.h"
 #include "video/video.h"
+#include "video/window.h"
+
 
 class Shell
 {

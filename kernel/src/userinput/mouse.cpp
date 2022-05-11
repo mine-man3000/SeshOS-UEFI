@@ -1,22 +1,26 @@
 #include "mouse.h"
+#include "../video/window.h"
 
+Mouse GlobalMouse;
+
+//0 is transparent, 1 is black, 2 is white, 3 is newline, 4 is end
 uint8_t MousePointer[] = {
-    0b11111111, 0b11111111, 
-    0b10000000, 0b00000001, 
-    0b10000000, 0b00000001, 
-    0b10000000, 0b00000001, 
-    0b10000000, 0b00000001, 
-    0b10000000, 0b00000001, 
-    0b10000000, 0b00000001, 
-    0b10000000, 0b00000001, 
-    0b10000000, 0b00000001, 
-    0b10000000, 0b00000001, 
-    0b10000000, 0b00000001, 
-    0b10000000, 0b00000001, 
-    0b10000000, 0b00000001, 
-    0b10000000, 0b00000001, 
-    0b10000000, 0b00000001, 
-    0b11111111, 0b11111111, 
+    0b11111111, 0b11100000, 
+    0b11111111, 0b10000000, 
+    0b11111110, 0b00000000, 
+    0b11111100, 0b00000000, 
+    0b11111000, 0b00000000, 
+    0b11110000, 0b00000000, 
+    0b11100000, 0b00000000, 
+    0b11000000, 0b00000000, 
+    0b11000000, 0b00000000, 
+    0b10000000, 0b00000000, 
+    0b10000000, 0b00000000, 
+    0b00000000, 0b00000000, 
+    0b00000000, 0b00000000, 
+    0b00000000, 0b00000000, 
+    0b00000000, 0b00000000, 
+    0b00000000, 0b00000000, 
 };
 
 void MouseWait()
@@ -179,17 +183,23 @@ void ProcessMousePacket()
         MousePosition.Y = GlobalRenderer->TargetFramebuffer->Height - 1;
 
     GlobalRenderer->ClearMouseCursor(MousePointer, MousePositionOld);
-    GlobalRenderer->DrawOverlayMouseCursor(MousePointer, MousePosition, 0xffffffff);
+    GlobalRenderer->DrawOverlayMouseCursor(MousePointer, MousePosition, 0xffff00ff);
 
     if (MousePacket[0] & PS2Leftbutton)
     {
+        GlobalMouse.LeftDown = true;
     }
     if (MousePacket[0] & PS2Middlebutton)
     {
-    }
+        GlobalMouse.MiddleDown = true;
+    }   
     if (MousePacket[0] & PS2Rightbutton)
     {
+        GlobalMouse.RightDown = true;
     }
+
+    GlobalMouse.pos.X = MousePosition.X;
+    GlobalMouse.pos.Y = MousePosition.Y;
 
     MousePacketReady = false;
     MousePositionOld = MousePosition;

@@ -2,6 +2,7 @@
 #include "../kernelUtil.h"
 #include "../renderer.h"
 
+
 #define PS2Leftbutton 0b00000001
 #define PS2Middlebutton 0b00000100
 #define PS2Rightbutton 0b00000010
@@ -11,8 +12,19 @@
 #define PS2YOverflow 0b10000000
 
 extern uint8_t MousePointer[];
+extern bool LeftMouseDown;
 
 void InitPS2Mouse();
 void HandlePS2Mouse(uint8_t data);
 void ProcessMousePacket();
 extern Point MousePosition;
+
+struct Mouse
+{
+    Point pos;
+    bool LeftDown;
+    bool RightDown;
+    bool MiddleDown;
+};
+
+extern Mouse GlobalMouse;

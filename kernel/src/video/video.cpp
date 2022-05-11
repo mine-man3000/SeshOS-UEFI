@@ -1,28 +1,25 @@
 #include "video.h"
+#include "window.h"
 
-void* address = GlobalRenderer->TargetFramebuffer->BaseAddress;
 int width =  GlobalRenderer->TargetFramebuffer->Width;
 int height = GlobalRenderer->TargetFramebuffer->Height;
-
 unsigned char *framebuffer = (unsigned char *) malloc(width * height * sizeof(unsigned char));
 
-void memcpy(uint8_t *source, uint8_t *dest, int nbytes)
-{
+void* address = GlobalRenderer->TargetFramebuffer->BaseAddress;
+unsigned int pps = GlobalRenderer->TargetFramebuffer->PixelsPerScanLine;
+
+void memcpy(uint8_t *source, uint8_t *dest, int nbytes) {
     int i;
-    for (i = 0; i < nbytes; i++)
-    {
+    for (i = 0; i < nbytes; i++) {
         *(dest + i) = *(source + i);
     }
 }
 
-void initGUI()
+static inline void putPixel(int x, int y, uint32_t pixel)
 {
-    GlobalRenderer->ClearColor = 0xff0000a4;
-    GlobalRenderer->Clear();
-
-    drawRect(0, 850, 1600, 50, 0xffa4a4a4);
-
-    drawWindow(10, 10, 1000, 200, "Hello World", 0xffffffff);
+    //*((uint32_t*)(GlobalRenderer->TargetFramebuffer->BaseAddress + 4 * GlobalRenderer->TargetFramebuffer->PixelsPerScanLine * y + 4 * x)) = pixel;
+    framebuffer[(x * 4) + (y * pps * 4)] = pixel;
+    memcpy(framebuffer, (uint8_t*)GlobalRenderer->TargetFramebuffer->BaseAddress, sizeof(framebuffer));
 }
 
 void drawRect(int startx, int starty, int width, int height, uint32_t VGA_COLOR)
@@ -34,17 +31,27 @@ void drawRect(int startx, int starty, int width, int height, uint32_t VGA_COLOR)
     {
         for (int y = starty; y < endy; y++)
         {
-            GlobalRenderer->PutPix(x, y, VGA_COLOR);
-        }        
+            putPixel(x, y, VGA_COLOR);
+            //GlobalRenderer->PutPix(x, y, VGA_COLOR);
+        }
     }
 }
 
-void drawWindow(int x, int y, int width, int height, const char* name, uint32_t VGA_COLOR)
+uint8_t drawImage(uint32_t *icon, int posx, int posy)
 {
-    drawRect(x, y, width, height, 0xffa4a4a4);
-    drawRect(x + 1, y, width - 2, height - 1, VGA_COLOR);
-    drawRect(x, y, width, 16, 0xff0000ff);
-    GlobalRenderer->Color = 0x00000000;
-    GlobalRenderer->CursorPosition = {x + 2, y - 1};
-    GlobalRenderer->Print(name);
+    int x = posx;
+    int y = posy;
+    for (int i = 0; icon[i] != 3; i++)
+    {
+        if(icon[i] == 2)
+        {
+            x = posx;
+            y++;
+        }
+        else
+        {
+            GlobalRenderer->PutPix(x, y, icon[i]);
+            x++;
+        }
+    }
 }

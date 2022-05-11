@@ -10,7 +10,7 @@ BasicRenderer::BasicRenderer(Framebuffer *targetFramebuffer, PSF1_FONT *psf1_Fon
     CursorPosition = {0, 0};
 }
 
-void BasicRenderer::PutPix(uint32_t x, uint32_t y, uint32_t color)
+inline void BasicRenderer::PutPix(uint32_t x, uint32_t y, uint32_t color)
 {
     *(uint32_t *)((uint64_t)TargetFramebuffer->BaseAddress + (x * 4) + (y * TargetFramebuffer->PixelsPerScanLine * 4)) = color;
 }
@@ -59,15 +59,11 @@ void BasicRenderer::DrawOverlayMouseCursor(uint8_t *mouseCursor, Point position,
     int differenceX = TargetFramebuffer->Width - position.X;
     int differenceY = TargetFramebuffer->Height - position.Y;
 
-    if (differenceX < 16)
-        xMax = differenceX;
-    if (differenceY < 16)
-        yMax = differenceY;
+    if (differenceX < 16) xMax = differenceX;
+    if (differenceY < 16) yMax = differenceY;
 
-    for (int y = 0; y < yMax; y++)
-    {
-        for (int x = 0; x < xMax; x++)
-        {
+    for (int y = 0; y < yMax; y++){
+        for (int x = 0; x < xMax; x++){
             int bit = y * 16 + x;
             int byte = bit / 8;
             if ((mouseCursor[byte] & (0b10000000 >> (x % 8))))
@@ -75,11 +71,11 @@ void BasicRenderer::DrawOverlayMouseCursor(uint8_t *mouseCursor, Point position,
                 MouseCursorBuffer[x + y * 16] = GetPix(position.X + x, position.Y + y);
                 PutPix(position.X + x, position.Y + y, color);
                 MouseCursorBufferAfter[x + y * 16] = GetPix(position.X + x, position.Y + y);
+
             }
         }
     }
-
-    MouseDrawn = true;  
+    MouseDrawn = true;
 }
 
 void BasicRenderer::Clear()

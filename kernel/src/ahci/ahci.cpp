@@ -202,6 +202,7 @@ namespace AHCI
 
         for (int i = 0; i < portCount; i++)
         {
+            //pass everything required to read from ports
             Port *port = ports[i];
 
             port->Configure();
@@ -218,6 +219,10 @@ namespace AHCI
                 port->Read(19, 1, port->buffer);
 
                 FillFiles(port);
+
+                port->Read(33, 1, port->buffer);
+
+                FillFileContents(port);
             }
         }
     }

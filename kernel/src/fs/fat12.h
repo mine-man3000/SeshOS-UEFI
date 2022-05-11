@@ -73,7 +73,11 @@ void volInfo();
 extern BiosParamBlock BPB;
 extern FatFile Files[224];
 extern int fileCount;
+extern int realFileCount;
 
 int FillFiles(AHCI::Port *port);
 void FillBPB(AHCI::Port *port);
+void FillFileContents(AHCI::Port *port);
+
 void ConvertFileNames();
+void cat();

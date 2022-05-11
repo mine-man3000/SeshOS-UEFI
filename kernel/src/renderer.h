@@ -45,7 +45,7 @@ class BasicRenderer
     void Print(const char* str);
     void PutChar(char chr, unsigned int xOff, unsigned int yOff);
     void PutChar(char chr);
-    void PutPix(uint32_t x, uint32_t y, uint32_t colour);
+    inline void PutPix(uint32_t x, uint32_t y, uint32_t colour);
     uint32_t GetPix(uint32_t x, uint32_t y);
     void ClearChar();
     void Clear();
