@@ -114,8 +114,23 @@ void ls()
     }
 }
 
-void cat()
+void cat(char* fileName)
 {
+    bool filefound = false;
+    for (int i = 0; i < fileCount; i++)
+    {
+
+        if (strcmp(Files[i].FileName, fileName))
+        {
+            GlobalRenderer->Print("File Found");
+            filefound = true;
+        }
+    }
+
+    if (!filefound)
+    {
+        GlobalRenderer->Print("File Not Found");
+    }
 
 }
 
@@ -210,7 +225,7 @@ int FillFiles(AHCI::Port *port)
         Files[fileCount].AccessDate[2]       = port->buffer[t + 17];
         Files[fileCount].ModifiedTime[2]     = port->buffer[t + 19];
         Files[fileCount].ModifiedDate[2]     = port->buffer[t + 21];
-        Files[fileCount].FileSize[4]         = port->buffer[t + 22];
+        Files[fileCount].FileSize         = port->buffer[t + 22];
         fileCount++;    
     }
     ConvertFileNames();
@@ -283,10 +298,39 @@ void fixFilename(char *filename, int index) {
 
 }
 
-void FillFileContents(AHCI::Port *port)
+void initFAT(BootInfo* bootInfo)
 {
+    outb(0xE9, 'A');
+    ACPI::SDTHeader *xsdt = (ACPI::SDTHeader *)(bootInfo->rsdp->XSDTAddress);
+    outb(0xE9, 'B');
+
+    ACPI::MCFGHeader *mcfg = (ACPI::MCFGHeader *)ACPI::FindTable(xsdt, (char *)"MCFG");
+    outb(0xE9, 'C');
+
+    PCI::EnumeratePCI(mcfg);
+    outb(0xE9, 'D');
+
+    AHCI::AHCIDriver driver = NULL;
+
+    AHCI::Port* port = driver.ports[0];
+    outb(0xE9, 'E');
+
+    port->Configure();
+    outb(0xE9, 'F');
+
+    port->Read(33, 1, port->buffer);
+    outb(0xE9, 'G');
+
+    port->buffer = (uint8_t *)GlobalAllocator.RequestPage();
+    outb(0xE9, 'H');
+    memset(port->buffer, 0, 0x1000);
+    outb(0xE9, 'I');
+
+    GlobalRenderer->Print("ACPI Initialized\n");
+
     for (int t = 0; t < 1024; t++)
     {
+        outb(0xE9, 'J');
         GlobalRenderer->PutChar(port->buffer[t]);
     }
 }

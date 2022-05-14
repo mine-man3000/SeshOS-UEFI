@@ -1,5 +1,6 @@
 #include "shell.h"
 #include "userinput/mouse.h"
+#include "scheduling/pit.h"
 
 void Shell::PrintPrompt()
 {
@@ -103,17 +104,22 @@ void Shell::TestCMD(char* input)
         }
         else
         {
-            for (int i = 0; i < fileCount; i++)
-            {
-                if (strcmp(Files[i].FileName, twoStrings.b))
-                {
-                    break;
-                }
-            }
-            cat();
+            cat(twoStrings.b);
         }
     }
     else if (strcmp(input, "")){}
+    else if (strcmp(input, "intro"))
+    {
+        GlobalRenderer->ClearColor = 0;
+        GlobalRenderer->Clear();
+        nComIntro();
+    }
+    else if (strcmp(input, "uptime"))
+    {
+        uint64_t uptime = PIT::TimeSinceBoot;
+        GlobalRenderer->Print(to_string((uint64_t)uptime));
+        GlobalRenderer->Print("\n");
+    }
     else if (strcmp(input, "startx"))
     {
         initGUI();

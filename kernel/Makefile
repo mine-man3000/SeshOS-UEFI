@@ -53,19 +53,20 @@ setup:
 buildimg:
 	dd if=/dev/zero of=$(BUILDDIR)/$(OSNAME).img bs=512 count=93750
 	../mtools/bin/mformat -i $(BUILDDIR)/$(OSNAME).img -v "SeshOS" -f 1440 ::
-	mmd -i $(BUILDDIR)/$(OSNAME).img ::/EFI
-	mmd -i $(BUILDDIR)/$(OSNAME).img ::/EFI/BOOT
+	../mtools/bin/mmd -i $(BUILDDIR)/$(OSNAME).img ::/EFI
+	../mtools/bin/mmd -i $(BUILDDIR)/$(OSNAME).img ::/EFI/BOOT
 	cp $(BOOTEFI) ./bootx64.efi
-	mcopy -i $(BUILDDIR)/$(OSNAME).img ./bootx64.efi ::/EFI/BOOT
+	../mtools/bin/mcopy -i $(BUILDDIR)/$(OSNAME).img ./bootx64.efi ::/EFI/BOOT
 	rm -rf ./bootx64.efi
-	mcopy -i $(BUILDDIR)/$(OSNAME).img $(BUILDDIR)/kernel.elf ::
-	mcopy -i $(BUILDDIR)/$(OSNAME).img $(BUILDDIR)/zap-light16.psf ::
-	touch test.txt
-	mcopy -i $(BUILDDIR)/$(OSNAME).img test.txt ::
+	../mtools/bin/mcopy -i $(BUILDDIR)/$(OSNAME).img $(BUILDDIR)/kernel.elf ::
+	../mtools/bin/mcopy -i $(BUILDDIR)/$(OSNAME).img $(BUILDDIR)/zap-light16.psf ::
+	../mtools/bin/mcopy -i $(BUILDDIR)/$(OSNAME).img test.txt ::
 
 
 run:
-	qemu-system-x86_64 -machine q35 -drive file=$(BUILDDIR)/$(OSNAME).img -m 1G -cpu qemu64 -drive if=pflash,format=raw,unit=0,file="../OVMF_CODE.fd",readonly=on -drive if=pflash,format=raw,unit=1,file="../OVMF_VARS.fd" -net none
-
+	qemu-system-x86_64 -machine q35 -drive file=$(BUILDDIR)/$(OSNAME).img -m 1G -cpu qemu64 \
+	-drive if=pflash,format=raw,unit=0,file="../OVMF_CODE.fd",readonly=on \
+	-drive if=pflash,format=raw,unit=1,file="../OVMF_VARS.fd" -net none \
+	-debugcon stdio
 clean:
 	rm -rvf lib/*

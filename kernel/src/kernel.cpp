@@ -9,9 +9,17 @@ extern "C" void _start(BootInfo *bootInfo)
 
     KernelInfo kernelInfo = InitializeKernel(bootInfo);
 
+    initFAT(bootInfo);
+
     GlobalRenderer->Print("\n\nWelcome to SeshOS!\n");
 
     //ConvertFileNames();
+
+    for (int i = 0; i < 10; i++)
+    {
+        
+    }
+    
 
     newShell->PrintPrompt();
 

@@ -1,6 +1,7 @@
 #pragma once
 #include "../ahci/ahci.h"
 #include "../renderer.h"
+#include "../kernelUtil.h"
 
 extern uint8_t* myBuffer;
 
@@ -63,8 +64,9 @@ struct FatFile
     uint64_t AccessDate[2];
     uint64_t ModifiedTime[2];
     uint64_t ModifiedDate[2];
-    uint64_t FileSize[4];
+    uint64_t FileSize;
     bool skip;
+    //uint64_t FileContents[32000000];
 };
 
 void ls();
@@ -80,4 +82,5 @@ void FillBPB(AHCI::Port *port);
 void FillFileContents(AHCI::Port *port);
 
 void ConvertFileNames();
-void cat();
+void cat(char* fileName);
+void initFAT(BootInfo* bootInfo);

@@ -72,15 +72,6 @@ void PrepareInterrupts()
     RemapPIC();
 }
 
-void PrepareACPI(BootInfo *bootInfo)
-{
-    ACPI::SDTHeader *xsdt = (ACPI::SDTHeader *)(bootInfo->rsdp->XSDTAddress);
-
-    ACPI::MCFGHeader *mcfg = (ACPI::MCFGHeader *)ACPI::FindTable(xsdt, (char *)"MCFG");
-
-    PCI::EnumeratePCI(mcfg);
-}
-
 BasicRenderer r = BasicRenderer(NULL, NULL);
 KernelInfo InitializeKernel(BootInfo *bootInfo)
 {
@@ -107,10 +98,6 @@ KernelInfo InitializeKernel(BootInfo *bootInfo)
     InitPS2Mouse();
 
     GlobalRenderer->Print("Mouse Initialized\n");
-
-    PrepareACPI(bootInfo);
-
-    GlobalRenderer->Print("ACPI Initialized\n");
 
     outb(PIC1_DATA, 0b11111000);
     outb(PIC2_DATA, 0b11101111);

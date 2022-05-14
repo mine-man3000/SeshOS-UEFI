@@ -10,15 +10,25 @@ namespace PIT
     void Sleepd(double seconds)
     {
         double startTime = TimeSinceBoot;
-        while (TimeSinceBoot < startTime + seconds)
+        uint32_t end = startTime + seconds * GetFrequency();
+        while (TimeSinceBoot < end)
         {
-            asm("hlt");
+            Tick();
+            GlobalRenderer->CursorPosition = {0,0};
+            GlobalRenderer->Print(" ");
+            //asm("hlt");
         }
     }
 
     void Sleep(uint64_t milliseconds)
     {
-        Sleepd((double)milliseconds / 1000);
+        double startTime = TimeSinceBoot;
+        while (TimeSinceBoot < startTime + (milliseconds * 1000))
+        {
+            /* code */
+        }
+        
+        //Sleepd((double)milliseconds / 1000);
     }
 
     void SetDivisor(uint16_t divisor)

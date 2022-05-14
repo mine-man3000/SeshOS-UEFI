@@ -29,7 +29,7 @@ void HandleKeyboard(uint8_t scancode)
         newShell->TestCMD(input);
         newShell->PrintPrompt();
         
-        for (int j = 0; input[j] != ' '; j++)
+        for (int j = 0; input[j] != '\0'; j++)
         {
             if (input[j] == '\0')
             {

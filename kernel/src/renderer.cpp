@@ -1,4 +1,7 @@
 #include "renderer.h"
+#include "icons/sad.h"
+#include "icons/qr.h"
+#include "video/video.h"
 
 BasicRenderer *GlobalRenderer;
 
@@ -220,18 +223,28 @@ void BasicRenderer::PutChar(char chr)
 
 void Panic(const char *panicMessage)
 {
-    GlobalRenderer->ClearColor = 0;
+    GlobalRenderer->ClearColor = 0x000078d7;
     GlobalRenderer->Clear();
 
-    GlobalRenderer->CursorPosition = {0, 0};
+    GlobalRenderer->CursorPosition = {100, 300};
 
     GlobalRenderer->Color = 0xffffffff;
 
     GlobalRenderer->Print("Kernel Panic\n\n");
 
+    GlobalRenderer->CursorPosition.X = 100;
+
     GlobalRenderer->Print(panicMessage);
 
-    GlobalRenderer->Print("\n\nSeshOS has been shutdown to prevent damage to your computer");
+    GlobalRenderer->Print("\n\n");
+
+    GlobalRenderer->CursorPosition.X = 100;
+
+    GlobalRenderer->Print("SeshOS has been shutdown to prevent damage to your computer");
+
+    drawImage(g_sad_data, 100, 100);
+
+    drawImage(g_qr_data, 100, 400);
 
     asm("hlt");
 }

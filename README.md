@@ -8,11 +8,11 @@ then run ``./build.sh`` and it will build and run the OS.
 
 What I want to do: 
 - [X] Booting 
-- [ ] Basic GUI 
+- [X] Basic GUI 
 - [X] Mouse Detection 
 - [X] Buttons
 - [X] Keyboard Driver
-- [ ] Window system
+- [X] Window system
 - [ ] Read from FAT12
 - [X] Terminal
 - [ ] Port *Something*

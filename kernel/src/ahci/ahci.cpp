@@ -4,10 +4,6 @@
 #include "../memory/heap.h"
 #include "../fs/fat12.h"
 
-void FillBPB(AHCI::Port *port);
-int FillFiles(AHCI::Port *port);
-
-
 namespace AHCI
 {
 
@@ -204,25 +200,21 @@ namespace AHCI
         {
             //pass everything required to read from ports
             Port *port = ports[i];
-
+            //
             port->Configure();
-
+            //
             port->buffer = (uint8_t *)GlobalAllocator.RequestPage();
             memset(port->buffer, 0, 0x1000);
-
+            //
             port->Read(0, 4, port->buffer);
-            
+            //
             if (i == 0)
             {
                 FillBPB(port);
-            
+            //
                 port->Read(19, 1, port->buffer);
-
+            //
                 FillFiles(port);
-
-                port->Read(33, 1, port->buffer);
-
-                FillFileContents(port);
             }
         }
     }
