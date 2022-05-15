@@ -1,12 +1,30 @@
 #!/usr/bin/env python3
+from datetime import date
+import time
+import os
 import sys
-import numpy as np
-from misc import *
+
 import cv2
 
 if len(sys.argv) < 3:
     print("Usage: iconconv <bitmapfile> <output_name>")
     raise TypeError("Usage: iconconv <bitmapfile> <output_name>")
+
+today = date.today()
+
+dateRightFormat = str(today).split("-")
+
+day   = dateRightFormat[2]
+month = dateRightFormat[1]
+year  = dateRightFormat[0]
+
+dateRightFormat[0] = month
+dateRightFormat[1] = day
+dateRightFormat[2] = year
+
+newToday = "/".join(dateRightFormat)
+
+finalDate = newToday[1]
 
 bmp = sys.argv[1]
 output = sys.argv[2]
@@ -52,7 +70,7 @@ print(tmp)
 if output[-1] != "h":
     raise TypeError("OUTPUT FILE IS NOT A .h FILE!")
 
-with open(output, "wt") as f:
+with open(output, mode="w", encoding="utf-8") as f:
     f.write("/*****************************************  \n")
     f.write("                   SeshOS                   \n")
     f.write("                                          \n\n")
@@ -62,10 +80,10 @@ with open(output, "wt") as f:
     f.write(bmp)
     f.write("                                            \n")
     f.write(" * Converted Date: ")
-    f.write(str(newToday))
+    f.write(newToday)
     f.write("                                            \n")
     f.write(" * Icon Last Mod: ")
-    f.write(str(FinalFinalModDate))
+    f.write(FinalFinalModDate)
     f.write("                                            \n")
     f.write("*****************************************/\n\n")
     f.write("#include \"../video/video.h\"\n")
@@ -89,10 +107,10 @@ with open(output, "at") as f:
             rgba |= (pixel[1] << 8)    #green
             rgba |= (pixel[2] << 16)   #red
 
-            hexWithout0x = str(hex(rgba)).split("x")
+            hexWithout0x = hex(rgba).split("x")
 
             toAdd = ["0x00", "", ", "]
-            toAdd[1] = hexWithout0x[1] 
+            toAdd[1] = hexWithout0x[1]
 
             newHex = "".join(toAdd)
 
@@ -114,7 +132,7 @@ with open(output, "at") as f:
     f.write(str(width))
     f.write(", ")
     f.write(str(height))
-    f.write(", g_") 
+    f.write(", g_")
     f.write(newPicture)
     f.write("_data\n")
 

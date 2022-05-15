@@ -8,7 +8,7 @@ ASMC = nasm
 LD = ld
 
 CFLAGS = -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -fno-stack-protector
-ASMFLAGS = 
+ASMFLAGS =
 LDFLAGS = -T $(LDS) -static -Bsymbolic -nostdlib
 
 SRCDIR := src
@@ -55,9 +55,6 @@ setup:
 	@mkdir $(OBJDIR)
 
 buildimg:
-ifeq (, $(wildcard $(FONTDIR)/zap-light16.psf))
-	$(error Please download zap-light16.psf from The ZAP Group and place it in kernel/fonts)
-endif
 	dd if=/dev/zero of=$(BUILDDIR)/$(OSNAME).img bs=512 count=93750
 	../mtools/bin/mformat -i $(BUILDDIR)/$(OSNAME).img -v "SeshOS" -f 1440 ::
 	../mtools/bin/mmd -i $(BUILDDIR)/$(OSNAME).img ::/EFI
