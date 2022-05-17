@@ -7,133 +7,68 @@ import sys
 import cv2
 
 if len(sys.argv) < 3:
-    print("Usage: iconconv <bitmapfile> <output_name>")
-    raise TypeError("Usage: iconconv <bitmapfile> <output_name>")
+    print("Usage: icontest.py <bitmapfile> <output_name>")
+    raise TypeError("Usage: icontest.py <bitmapfile> <output_name>")
 
-today = date.today()
+# Arguments variables
+IMAGE_FILEPATH = sys.argv[1]
+HEADER_FILEPATH = sys.argv[2]
 
-dateRightFormat = str(today).split("-")
-
-day   = dateRightFormat[2]
-month = dateRightFormat[1]
-year  = dateRightFormat[0]
-
-dateRightFormat[0] = month
-dateRightFormat[1] = day
-dateRightFormat[2] = year
-
-newToday = "/".join(dateRightFormat)
-
-finalDate = newToday[1]
-
-bmp = sys.argv[1]
-output = sys.argv[2]
-outputFile = sys.argv[2]
-
-modTime = os.path.getmtime(bmp)
-modDate = time.ctime(modTime)
-
-image = cv2.imread(bmp, cv2.IMREAD_UNCHANGED)
-
-tmp = output.split("/")
-array = tmp[-1].split(".")
-
-newPicture = array[0]
-print(newPicture)
-
-width = image.shape[1]
-height = image.shape[0]
-channel = image.shape[2]
-
-test = modDate.split(" ")
-
-newMonth = test[1]
-newDay   = test[2]
-newYear  = test[4]
-
-FinalModDate = ["", "", ""]
-
-FinalModDate[0] = newMonth
-FinalModDate[1] = newDay
-FinalModDate[2] = newYear
-
-FinalFinalModDate = "/".join(FinalModDate)
-split = output.split(".")
-
-
-#print("picture:", bmp,end="")
-#print(", output:", output,end="")
-#print(", outputFile:", outputFile)
-
-print(tmp)
-
-if output[-1] != "h":
+if HEADER_FILEPATH[-1] != "h":
     raise TypeError("OUTPUT FILE IS NOT A .h FILE!")
 
-with open(output, mode="w", encoding="utf-8") as f:
+IMAGE_HEADER_FILENAME = HEADER_FILEPATH.split("/")[-1].split(".")[0]
+
+# The current time
+DATE_RIGHT_FORMAT = str(date.today()).split("-")
+NEW_TODAY = "/".join([DATE_RIGHT_FORMAT[1], DATE_RIGHT_FORMAT[2], DATE_RIGHT_FORMAT[0]])
+MOD_DATE = time.ctime(os.path.getmtime(IMAGE_FILEPATH)).split(" ")
+FINAL_MOD_DATE = "/".join([MOD_DATE[1], MOD_DATE[2], MOD_DATE[4]])
+
+# Read the image file
+IMAGE = cv2.imread(IMAGE_FILEPATH, cv2.IMREAD_UNCHANGED)
+WIDTH = IMAGE.shape[1]
+HEIGHT = IMAGE.shape[0]
+
+with open(HEADER_FILEPATH, "w", encoding="utf-8") as f:
     f.write("/*****************************************  \n")
     f.write("                   SeshOS                   \n")
     f.write("                                          \n\n")
     f.write("  This is a converted icon to embed into    \n")
     f.write("            the kernel image.               \n")
     f.write(" * Converted File: ")
-    f.write(bmp)
+    f.write(IMAGE_FILEPATH)
     f.write("                                            \n")
     f.write(" * Converted Date: ")
-    f.write(newToday)
+    f.write(NEW_TODAY)
     f.write("                                            \n")
     f.write(" * Icon Last Mod: ")
-    f.write(FinalFinalModDate)
+    f.write(FINAL_MOD_DATE)
     f.write("                                            \n")
     f.write("*****************************************/\n\n")
-    f.write("#include \"../video/video.h\"\n")
+    f.write('#include "../video/video.h"\n')
+    f.write(f"uint32_t g_{IMAGE_HEADER_FILENAME}_data[] = {{\n")
 
-x = 0
-y = 0
-
-with open(output, "at") as f:
-    f.write("uint32_t g_")
-    f.write(newPicture)
-    f.write("_data[] = {\n")
-
-    for y in range(height):
+    for y in range(HEIGHT):
         f.write("\t")
-        for x in range(width):
+        for x in range(WIDTH):
 
-            pixel = image[y, x]
-            rgba = 0
+            PIXEL = IMAGE[y, x]
+            RGB = 0
 
-            rgba |= (pixel[0] << 0)    #blue
-            rgba |= (pixel[1] << 8)    #green
-            rgba |= (pixel[2] << 16)   #red
+            RGB |= PIXEL[0] << 0  # blue
+            RGB |= PIXEL[1] << 8  # green
+            RGB |= PIXEL[2] << 16  # red
 
-            hexWithout0x = hex(rgba).split("x")
+            RGB_HEX = hex(RGB).split("x")
+            NEW_RGBA_HEX = f"0x00{RGB_HEX[1]}, "
 
-            toAdd = ["0x00", "", ", "]
-            toAdd[1] = hexWithout0x[1]
-
-            newHex = "".join(toAdd)
-
-            # if(pixel[2] == 0):
-            #      newHex = "0xffffffff, "
-
-            if(newHex == "0x000, "):
-                newHex = "0x00000000, "
-            f.write(newHex)
+            if NEW_RGBA_HEX == "0x000, ":
+                NEW_RGBA_HEX = "0x00000000, "
+            f.write(NEW_RGBA_HEX)
         f.write("'2',\n")
 
     f.write("3};\n\n")
-
-    f.write("Image g_")
-    f.write(newPicture)
-    f.write("_icon = {\n")
-
-    f.write("\t")
-    f.write(str(width))
-    f.write(", ")
-    f.write(str(height))
-    f.write(", g_")
-    f.write(newPicture)
-    f.write("_data\n")
-
+    f.write(f"Image g_{IMAGE_HEADER_FILENAME}_icon = {{\n")
+    f.write(f"\t{WIDTH}, {HEIGHT}, g_{IMAGE_HEADER_FILENAME}_data\n")
     f.write("};\n")
