@@ -8,21 +8,26 @@ ASMC = nasm
 LD = ld
 
 CFLAGS = -ffreestanding -fshort-wchar -mno-red-zone -fno-exceptions -fno-stack-protector
-ASMFLAGS = 
+ASMFLAGS =
 LDFLAGS = -T $(LDS) -static -Bsymbolic -nostdlib
 
 SRCDIR := src
 OBJDIR := lib
+FONTDIR := fonts
 BUILDDIR = bin
 BOOTEFI := $(GNUEFI)/x86_64/bootloader/main.efi
 
 rwildcard=$(foreach d,$(wildcard $(1:=/*)),$(call rwildcard,$d,$2) $(filter $(subst *,%,$2),$d))
 
-SRC = $(call rwildcard,$(SRCDIR),*.cpp)  
-ASMSRC = $(call rwildcard,$(SRCDIR),*.asm)  
+SRC = $(call rwildcard,$(SRCDIR),*.cpp)
+ASMSRC = $(call rwildcard,$(SRCDIR),*.asm)
 OBJS = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SRC))
 OBJS += $(patsubst $(SRCDIR)/%.asm, $(OBJDIR)/%_asm.o, $(ASMSRC))
 DIRS = $(wildcard $(SRCDIR)/*)
+
+all: setup kernel buildimg
+
+.PHONEY: setup kernel link buildimg run clean
 
 kernel: $(OBJS) link
 
@@ -35,19 +40,18 @@ $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	@ echo !==== COMPILING $^
 	@ mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $^ -o $@
-	
+
 $(OBJDIR)/%_asm.o: $(SRCDIR)/%.asm
 	@ echo !==== COMPILING $^
 	@ mkdir -p $(@D)
 	$(ASMC) $(ASMFLAGS) $^ -f elf64 -o $@
-	 
+
 link:
 	@ echo !==== LINKING
 	$(LD) $(LDFLAGS) -o $(BUILDDIR)/kernel.elf $(OBJS)
 
 setup:
 	@mkdir $(BUILDDIR)
-	@mkdir $(SRCDIR)
 	@mkdir $(OBJDIR)
 
 buildimg:
@@ -59,7 +63,7 @@ buildimg:
 	../mtools/bin/mcopy -i $(BUILDDIR)/$(OSNAME).img ./bootx64.efi ::/EFI/BOOT
 	rm -rf ./bootx64.efi
 	../mtools/bin/mcopy -i $(BUILDDIR)/$(OSNAME).img $(BUILDDIR)/kernel.elf ::
-	../mtools/bin/mcopy -i $(BUILDDIR)/$(OSNAME).img $(BUILDDIR)/zap-light16.psf ::
+	../mtools/bin/mcopy -i $(BUILDDIR)/$(OSNAME).img $(FONTDIR)/zap-light16.psf ::
 	../mtools/bin/mcopy -i $(BUILDDIR)/$(OSNAME).img test.txt ::
 
 
@@ -68,5 +72,7 @@ run:
 	-drive if=pflash,format=raw,unit=0,file="../OVMF_CODE.fd",readonly=on \
 	-drive if=pflash,format=raw,unit=1,file="../OVMF_VARS.fd" -net none \
 	-debugcon stdio
+
 clean:
-	rm -rvf lib/*
+	rm -rvf $(OBJDIR)
+	rm -rvf $(BUILDDIR)
